@@ -11,7 +11,7 @@ export default function HomePage() {
           The Dutch fashion industry faces a significant challenge: high return rates. Typically ranging between <span className="font-semibold">25% and 50%</span>, these returns are predominantly driven by issues with size and fit, accounting for approximately <span className="font-semibold">70%</span> of cases.
         </p>
         <p className="text-lg text-gray-600">
-          This isn't just an operational hurdle; it carries substantial financial and environmental costs.
+          This isn&#39;t just an operational hurdle; it carries substantial financial and environmental costs.
         </p>
       </section>
 

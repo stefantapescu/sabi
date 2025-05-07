@@ -15,7 +15,7 @@ type DutchContext = {
 };
 
 export default async function DutchContextPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: contexts, error } = await supabase
     .from('dutch_context')
     .select('*')

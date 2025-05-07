@@ -21,7 +21,7 @@ type CaseStudy = {
 };
 
 export default async function CaseStudiesPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   // Fetch case studies, potentially joining with solutions if needed later
   // For now, just fetch from case_studies
   const { data: studies, error } = await supabase

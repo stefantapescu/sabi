@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 // export const revalidate = 3600; // Revalidate every hour, for example
 
 export default async function ComparatorPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('solutions')
     .select('*')

@@ -16,7 +16,7 @@ type BestPractice = {
 };
 
 export default async function BestPracticesPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: practices, error } = await supabase
     .from('best_practices')
     .select('*')
