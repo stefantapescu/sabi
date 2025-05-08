@@ -27,6 +27,7 @@ export default function ROISimulatorPage() {
   const [avgOrderValue, setAvgOrderValue] = useState<number | string>('');
   const [currentReturnRate, setCurrentReturnRate] = useState<number | string>('');
   const [costPerReturn, setCostPerReturn] = useState<number | string>(12.50); // Default value
+  const [inputError, setInputError] = useState<string>(''); // State for input error messages
 
   // --- State for results ---
   const [baselineResults, setBaselineResults] = useState<{
@@ -60,21 +61,22 @@ export default function ROISimulatorPage() {
     const numCostPerReturn = Number(costPerReturn);
 
     // Basic validation: check if inputs are valid numbers and positive (or zero for rate)
-    if (
-      isNaN(numMonthlyOrders) || numMonthlyOrders < 0 ||
-      isNaN(numAvgOrderValue) || numAvgOrderValue < 0 ||
-      isNaN(numCurrentReturnRatePercent) || numCurrentReturnRatePercent < 0 || numCurrentReturnRatePercent > 100 ||
-      isNaN(numCostPerReturn) || numCostPerReturn < 0
-    ) {
+    let errorMessage = '';
+    if (isNaN(numMonthlyOrders) || numMonthlyOrders <= 0) errorMessage += 'Monthly orders must be a positive number. ';
+    if (isNaN(numAvgOrderValue) || numAvgOrderValue <= 0) errorMessage += 'Average order value must be a positive number. ';
+    if (isNaN(numCurrentReturnRatePercent) || numCurrentReturnRatePercent < 0 || numCurrentReturnRatePercent > 100) errorMessage += 'Return rate must be between 0 and 100. ';
+    if (isNaN(numCostPerReturn) || numCostPerReturn < 0) errorMessage += 'Cost per return must be a non-negative number. ';
+
+    if (errorMessage) {
+      setInputError(errorMessage.trim());
       // Reset results if inputs are invalid
       setBaselineResults({ monthlyReturnedOrders: null, currentMonthlyProcessingCost: null, currentMonthlyRevenueLost: null });
       setSizeRecSavings(initialSavings);
       setVtoArSavings(initialSavings);
       setReturnMgtSavings(initialSavings);
-      console.error("Invalid input values provided.");
-      // Optionally show an error message to the user
       return;
     }
+    setInputError(''); // Clear any previous errors
 
     // --- Core Calculations (Baseline Situation) ---
     const currentReturnRateDecimal = numCurrentReturnRatePercent / 100;
@@ -131,10 +133,20 @@ export default function ROISimulatorPage() {
 
   // Trigger calculation
   const handleCalculate = () => {
-    console.log("Calculating ROI...");
     calculateROIEstimates();
   };
 
+  const handleReset = () => {
+    setMonthlyOrders('');
+    setAvgOrderValue('');
+    setCurrentReturnRate('');
+    setCostPerReturn(12.50); // Reset to default
+    setBaselineResults({ monthlyReturnedOrders: null, currentMonthlyProcessingCost: null, currentMonthlyRevenueLost: null });
+    setSizeRecSavings(initialSavings);
+    setVtoArSavings(initialSavings);
+    setReturnMgtSavings(initialSavings);
+    setInputError('');
+  };
 
   return (
     <div className="dark:text-gray-100"> {/* Ensure default text is light in dark mode */}
@@ -229,12 +241,25 @@ export default function ROISimulatorPage() {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-2 sm:text-sm border-gray-300 dark:border-gray-600 rounded-md p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="e.g., 12.50"
                 min="0"
-                step="0.01"
-              />
+                 step="0.01"
+               />
              </div>
           </div>
         </div>
-        <div className="mt-6 text-right">
+        {inputError && (
+          <div className="mt-4 p-3 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-md text-red-700 dark:text-red-200 text-sm">
+            <p className="font-semibold">Please correct the following errors:</p>
+            <p>{inputError}</p>
+          </div>
+        )}
+        <div className="mt-6 flex justify-end space-x-3">
+           <button
+             type="button"
+             onClick={handleReset}
+             className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+           >
+             Reset
+           </button>
            <button
              type="button"
              onClick={handleCalculate}
@@ -247,79 +272,75 @@ export default function ROISimulatorPage() {
       {/* --- End Input Form --- */}
 
 
-      {/* --- Results Sections (Placeholders) --- */}
-      <div className="mt-10">
-        {/* Baseline Summary Section */}
-        <div id="baseline-summary" className="mb-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">Baseline Summary</h2>
-          {baselineResults.monthlyReturnedOrders !== null ? (
-            <div className="space-y-2 text-sm text-gray-800 dark:text-gray-200">
-              <p>Est. Monthly Returned Orders: <span className="font-medium">{baselineResults.monthlyReturnedOrders.toFixed(0)}</span></p>
-              <p>Est. Monthly Return Processing Cost: <span className="font-medium">{formatCurrency(baselineResults.currentMonthlyProcessingCost)}</span></p>
-              <p>Est. Monthly Revenue Lost on Returns: <span className="font-medium">{formatCurrency(baselineResults.currentMonthlyRevenueLost)}</span></p>
-            </div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400 italic">Enter your metrics and click calculate to see baseline costs.</p>
-          )}
-        </div>
-
-        {/* Simulation Results Section */}
-        <div id="simulation-results" className="space-y-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">Simulation Results (Potential Savings)</h2>
-
-          {/* Size Rec Results */}
-          <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"> {/* Changed background to neutral gray */}
-            <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-2">Size Recommendation Tech</h3> {/* Adjusted dark heading color */}
-            {sizeRecSavings.monthlyLow !== null ? (
-              <div className="text-sm space-y-1 text-gray-800 dark:text-gray-200"> {/* Changed text color to neutral */}
-                <p>Est. New Return Rate: <span className="font-medium">{formatPercent(sizeRecSavings.newRateLow)} - {formatPercent(sizeRecSavings.newRateHigh)}</span></p>
-                <p>Est. Monthly Savings: <span className="font-medium">{formatCurrency(sizeRecSavings.monthlyLow)} - {formatCurrency(sizeRecSavings.monthlyHigh)}</span></p>
-                <p>Est. Annual Savings: <span className="font-medium">{formatCurrency(sizeRecSavings.annualLow)} - {formatCurrency(sizeRecSavings.annualHigh)}</span></p>
+      {/* --- Results Sections --- */}
+      {(baselineResults.monthlyReturnedOrders !== null || inputError) && ( // Show results area if calculated or if there was an error (to keep layout consistent)
+        <div className="mt-10">
+          {/* Baseline Summary Section */}
+          {(baselineResults.monthlyReturnedOrders !== null && !inputError) && (
+            <div id="baseline-summary" className="mb-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+              <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">Baseline Summary</h2>
+              <div className="space-y-2 text-sm text-gray-800 dark:text-gray-200">
+                <p>Est. Monthly Returned Orders: <span className="font-medium">{baselineResults.monthlyReturnedOrders.toFixed(0)}</span></p>
+                <p>Est. Monthly Return Processing Cost: <span className="font-medium">{formatCurrency(baselineResults.currentMonthlyProcessingCost)}</span></p>
+                <p>Est. Monthly Revenue Lost on Returns: <span className="font-medium">{formatCurrency(baselineResults.currentMonthlyRevenueLost)}</span></p>
               </div>
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 italic text-sm">Potential savings will appear here after calculation.</p>
-            )}
-          </div>
+            </div>
+          )}
+          {baselineResults.monthlyReturnedOrders === null && !inputError && (
+             <div className="mb-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                <p className="text-gray-500 dark:text-gray-400 italic">Enter your metrics and click calculate to see baseline costs and potential savings.</p>
+             </div>
+          )}
 
-          {/* VTO/AR Results */}
-          <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"> {/* Changed background to neutral gray */}
-            <h3 className="font-semibold text-green-800 dark:text-green-300 mb-2">VTO / AR Tech</h3> {/* Adjusted dark heading color */}
-            {vtoArSavings.monthlyLow !== null ? (
-               <div className="text-sm space-y-1 text-gray-800 dark:text-gray-200"> {/* Changed text color to neutral */}
-                 <p>Est. New Return Rate: <span className="font-medium">{formatPercent(vtoArSavings.newRateLow)} - {formatPercent(vtoArSavings.newRateHigh)}</span></p>
-                 <p>Est. Monthly Savings: <span className="font-medium">{formatCurrency(vtoArSavings.monthlyLow)} - {formatCurrency(vtoArSavings.monthlyHigh)}</span></p>
-                 <p>Est. Annual Savings: <span className="font-medium">{formatCurrency(vtoArSavings.annualLow)} - {formatCurrency(vtoArSavings.annualHigh)}</span></p>
-               </div>
-             ) : (
-               <p className="text-gray-500 dark:text-gray-400 italic text-sm">Potential savings will appear here after calculation.</p>
-             )}
-          </div>
 
-          {/* Return Mgt Results */}
-          <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"> {/* Changed background to neutral gray */}
-            <h3 className="font-semibold text-purple-800 dark:text-purple-300 mb-2">Return Management Platforms</h3> {/* Adjusted dark heading color */}
-             {returnMgtSavings.monthlyLow !== null ? (
-               <div className="text-sm space-y-1 text-gray-800 dark:text-gray-200"> {/* Changed text color to neutral */}
-                 <p>Est. New Return Rate: <span className="font-medium">{formatPercent(returnMgtSavings.newRateLow)} - {formatPercent(returnMgtSavings.newRateHigh)}</span></p>
-                 <p>Est. Monthly Savings: <span className="font-medium">{formatCurrency(returnMgtSavings.monthlyLow)} - {formatCurrency(returnMgtSavings.monthlyHigh)}</span></p>
-                 <p>Est. Annual Savings: <span className="font-medium">{formatCurrency(returnMgtSavings.annualLow)} - {formatCurrency(returnMgtSavings.annualHigh)}</span></p>
-               </div>
-             ) : (
-               <p className="text-gray-500 dark:text-gray-400 italic text-sm">Potential savings will appear here after calculation.</p>
-             )}
-           </div>
-        </div>
+          {/* Simulation Results Section */}
+          {baselineResults.monthlyReturnedOrders !== null && !inputError && (
+            <div id="simulation-results" className="space-y-6">
+              <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">Simulation Results (Potential Savings)</h2>
 
-         {/* Disclaimers Section */}
-         <div id="disclaimers" className="mt-8 p-4 bg-yellow-100 dark:bg-gray-700 border border-yellow-300 dark:border-gray-600 rounded-lg text-yellow-900 dark:text-gray-200 text-sm"> {/* Changed background and text */}
-            <p className="font-semibold mb-1 text-yellow-800 dark:text-yellow-300">Important Disclaimers:</p> {/* Adjusted heading color */}
+              {/* Size Rec Results */}
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-2">Size Recommendation Tech</h3>
+                <div className="text-sm space-y-1 text-gray-800 dark:text-gray-200">
+                  <p>Est. New Return Rate: <span className="font-medium">{formatPercent(sizeRecSavings.newRateLow)} - {formatPercent(sizeRecSavings.newRateHigh)}</span></p>
+                  <p>Est. Monthly Savings: <span className="font-medium">{formatCurrency(sizeRecSavings.monthlyLow)} - {formatCurrency(sizeRecSavings.monthlyHigh)}</span></p>
+                  <p>Est. Annual Savings: <span className="font-medium">{formatCurrency(sizeRecSavings.annualLow)} - {formatCurrency(sizeRecSavings.annualHigh)}</span></p>
+                </div>
+              </div>
+
+              {/* VTO/AR Results */}
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                <h3 className="font-semibold text-green-800 dark:text-green-300 mb-2">VTO / AR Tech</h3>
+                <div className="text-sm space-y-1 text-gray-800 dark:text-gray-200">
+                  <p>Est. New Return Rate: <span className="font-medium">{formatPercent(vtoArSavings.newRateLow)} - {formatPercent(vtoArSavings.newRateHigh)}</span></p>
+                  <p>Est. Monthly Savings: <span className="font-medium">{formatCurrency(vtoArSavings.monthlyLow)} - {formatCurrency(vtoArSavings.monthlyHigh)}</span></p>
+                  <p>Est. Annual Savings: <span className="font-medium">{formatCurrency(vtoArSavings.annualLow)} - {formatCurrency(vtoArSavings.annualHigh)}</span></p>
+                </div>
+              </div>
+
+              {/* Return Mgt Results */}
+              <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                <h3 className="font-semibold text-purple-800 dark:text-purple-300 mb-2">Return Management Platforms</h3>
+                <div className="text-sm space-y-1 text-gray-800 dark:text-gray-200">
+                  <p>Est. New Return Rate: <span className="font-medium">{formatPercent(returnMgtSavings.newRateLow)} - {formatPercent(returnMgtSavings.newRateHigh)}</span></p>
+                  <p>Est. Monthly Savings: <span className="font-medium">{formatCurrency(returnMgtSavings.monthlyLow)} - {formatCurrency(returnMgtSavings.monthlyHigh)}</span></p>
+                  <p>Est. Annual Savings: <span className="font-medium">{formatCurrency(returnMgtSavings.annualLow)} - {formatCurrency(returnMgtSavings.annualHigh)}</span></p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Disclaimers Section */}
+          <div id="disclaimers" className="mt-8 p-4 bg-yellow-100 dark:bg-gray-700 border border-yellow-300 dark:border-gray-600 rounded-lg text-yellow-900 dark:text-gray-200 text-sm">
+            <p className="font-semibold mb-1 text-yellow-800 dark:text-yellow-300">Important Disclaimers:</p>
             <ul className="list-disc list-inside space-y-1">
                 <li>These calculations are estimates based on reported reduction ranges and your inputs. Actual results will vary.</li>
                 <li>Savings shown represent potential reduction in return processing costs only and do <span className="font-semibold">not</span> account for the implementation or subscription costs of the technologies themselves.</li>
                 <li>This tool provides indicative figures for informational purposes and does not constitute financial advice or a guarantee of savings.</li>
             </ul>
-         </div>
-      </div>
+          </div>
+        </div>
+      )}
       {/* --- End Results Sections --- */}
 
     </div>
