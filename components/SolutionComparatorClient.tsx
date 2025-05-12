@@ -85,18 +85,18 @@ export default function SolutionComparatorClient({ initialSolutions }: SolutionC
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Solution Comparator</h1>
-      <p className="mb-6 text-gray-600">
+    <div className="text-white">
+      <h1 className="text-3xl font-bold mb-6 text-white">Solution Comparator</h1>
+      <p className="mb-6 text-white">
         Explore and compare various technology solutions designed to help reduce return rates in fashion e-commerce. Use the filters below to narrow down options based on your needs.
       </p>
 
       {/* --- Filter UI --- */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="mb-8 p-6 bg-slate-700/90 rounded-lg border border-slate-600">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
           {/* Category Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <label className="block text-sm font-medium text-white mb-2">Category</label>
             <div className="space-y-2">
               {(availableCategories.length > 0 ? availableCategories : staticCategories).map(category => (
                 <div key={category} className="flex items-center">
@@ -107,9 +107,9 @@ export default function SolutionComparatorClient({ initialSolutions }: SolutionC
                     value={category}
                     checked={selectedCategories.includes(category)}
                     onChange={handleCategoryChange}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="h-4 w-4 text-blue-600 border-slate-500 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor={`category-${category.replace(/\s+/g, '-')}`} className="ml-2 block text-sm text-gray-900">
+                  <label htmlFor={`category-${category.replace(/\s+/g, '-')}`} className="ml-2 block text-sm text-white">
                     {category}
                   </label>
                 </div>
@@ -119,13 +119,13 @@ export default function SolutionComparatorClient({ initialSolutions }: SolutionC
 
           {/* Complexity Filter */}
           <div>
-            <label htmlFor="complexity-filter" className="block text-sm font-medium text-gray-700 mb-2">Integration Complexity</label>
+            <label htmlFor="complexity-filter" className="block text-sm font-medium text-white mb-2">Integration Complexity</label>
             <select
               id="complexity-filter"
               name="complexity"
               value={selectedComplexity}
               onChange={(e) => setSelectedComplexity(e.target.value)}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-sm bg-slate-600 border-slate-500 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md"
             >
               <option value="">All Complexities</option>
               {(availableComplexities.length > 0 ? availableComplexities : staticComplexities).map(level => (
@@ -176,11 +176,11 @@ export default function SolutionComparatorClient({ initialSolutions }: SolutionC
         <div className="mt-6 flex justify-between items-center">
           <button
             onClick={clearFilters}
-            className="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-slate-500 shadow-sm text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Clear All Filters
           </button>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-white">
             Showing {filteredSolutions.length} of {initialSolutions.length} solutions
           </p>
         </div>
@@ -194,7 +194,7 @@ export default function SolutionComparatorClient({ initialSolutions }: SolutionC
             <SolutionCard key={solution.id} solution={solution} />
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500 py-10">
+          <p className="col-span-full text-center text-white py-10">
             No solutions match the current filters. Try adjusting your criteria or clearing filters.
           </p>
         )}

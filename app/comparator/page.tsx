@@ -24,9 +24,9 @@ export default async function ComparatorPage() {
     // Render a user-friendly error message within the client component perhaps?
     // Or handle it here. For now, showing a simple message.
     return (
-      <div>
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">Solution Comparator</h1>
-        <p className="text-red-500">Could not load solutions at this time. Please try again later.</p>
+      <div className="text-white">
+        <h1 className="text-3xl font-bold mb-6 text-white">Solution Comparator</h1>
+        <p className="text-red-300">Could not load solutions at this time. Please try again later.</p>
       </div>
     );
   }
@@ -36,9 +36,9 @@ export default async function ComparatorPage() {
 
   if (solutions.length === 0) {
      return (
-       <div>
-         <h1 className="text-3xl font-bold mb-6 text-gray-800">Solution Comparator</h1>
-         <p>No solutions found in the database.</p>
+       <div className="text-white">
+         <h1 className="text-3xl font-bold mb-6 text-white">Solution Comparator</h1>
+         <p className="text-white">No solutions found in the database.</p>
        </div>
      );
   }

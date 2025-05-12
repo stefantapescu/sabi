@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/comparator", label: "Solution Comparator" },
   { href: "/roi-simulator", label: "ROI Simulator" },
+  { href: "/co2-calculator", label: "CO2 Calculator" },
   { href: "/best-practices", label: "Best Practices" },
   { href: "/dutch-context", label: "Dutch Context" },
   { href: "/case-studies", label: "Case Studies" },
@@ -22,9 +23,9 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-gray-800 text-white p-4 sticky top-0 z-50 shadow-md">
+    <header className="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
       <nav className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold hover:text-gray-300 transition-colors">
+        <Link href="/" className="text-xl font-bold hover:text-blue-300 transition-colors">
           Dutch Return Toolkit
         </Link>
 
@@ -55,8 +56,8 @@ export default function Header() {
                 href={link.href}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? 'bg-gray-900 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    ? 'bg-blue-800 text-white'
+                    : 'text-gray-200 hover:bg-blue-700 hover:text-white'
                 }`}
               >
                 {link.label}
@@ -68,7 +69,7 @@ export default function Header() {
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-gray-800 shadow-lg pb-3">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-slate-900 shadow-lg pb-3">
           <ul className="flex flex-col items-center space-y-2 pt-2">
             {navLinks.map((link) => (
               <li key={link.href} className="w-full text-center">
@@ -77,8 +78,8 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)} // Close menu on click
                   className={`block px-3 py-3 rounded-md text-base font-medium w-full transition-colors ${
                     pathname === link.href
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-blue-800 text-white'
+                      : 'text-gray-200 hover:bg-blue-700 hover:text-white'
                   }`}
                 >
                   {link.label}

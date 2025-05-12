@@ -149,19 +149,19 @@ export default function ROISimulatorPage() {
   };
 
   return (
-    <div className="dark:text-gray-100"> {/* Ensure default text is light in dark mode */}
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">ROI Simulator</h1>
-      <p className="mb-6 text-gray-600 dark:text-gray-300">
+    <div className="text-white"> {/* Always use white text against the blue gradient */}
+      <h1 className="text-3xl font-bold mb-6 text-white">ROI Simulator</h1>
+      <p className="mb-6 text-white">
         Estimate the potential return on investment (ROI) from implementing different types of return reduction technologies. Enter your current business metrics below.
       </p>
 
       {/* --- Input Form --- */}
-      <div className="mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">Your Business Metrics</h2>
+      <div className="mb-8 p-6 bg-slate-700/90 rounded-lg shadow border border-slate-600">
+        <h2 className="text-xl font-semibold mb-4 text-white">Your Business Metrics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Monthly Orders */}
           <div>
-            <label htmlFor="monthlyOrders" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="monthlyOrders" className="block text-sm font-medium text-white">
               Average Monthly Orders
             </label>
             <input
@@ -170,7 +170,7 @@ export default function ROISimulatorPage() {
               id="monthlyOrders"
               value={monthlyOrders}
               onChange={(e) => setMonthlyOrders(e.target.value)}
-              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 rounded-md p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+              className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-slate-500 rounded-md p-2 bg-slate-600 text-white placeholder-slate-400"
               placeholder="e.g., 1000"
               min="0"
             />
