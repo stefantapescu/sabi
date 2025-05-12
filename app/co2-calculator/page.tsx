@@ -7,7 +7,7 @@ import { useState, ChangeEvent } from 'react';
 /* eslint-disable react/no-unescaped-entities */
 
 // Constants for CO2 calculations
-const TRANSPORT_EMISSIONS_PER_KM_PER_KG = 0.59; // kg CO2e per km per kg
+const TRANSPORT_EMISSIONS_PER_KM_PER_KG = 0.00059; // kg CO2e per km per kg (correct value)
 const CARDBOARD_EMISSIONS_PER_KG = 2.93; // kg CO2e per kg of cardboard
 const BUBBLE_WRAP_EMISSIONS_PER_KG = 3.56; // kg CO2e per kg of bubble wrap
 const TREE_ABSORPTION_PER_YEAR = 25; // kg CO2e per year (average)
@@ -50,13 +50,13 @@ export default function CO2CalculatorPage() {
     const bubbleWrapWeightNum = parseFloat(bubbleWrapWeight) || 0;
     
     // Calculate transport emissions for initial shipment (in kg)
-    // The formula should convert to kg (original is in grams CO2e)
+    // Using the correct emission factor (no division by 1000 needed)
     const initialTransportEmissions = 
-      (TRANSPORT_EMISSIONS_PER_KM_PER_KG * distanceNum * initialWeightNum) / 1000;
+      TRANSPORT_EMISSIONS_PER_KM_PER_KG * distanceNum * initialWeightNum;
     
     // Calculate transport emissions for return shipment (if applicable) (in kg)
     const returnTransportEmissions = includeReturn ? 
-      (TRANSPORT_EMISSIONS_PER_KM_PER_KG * distanceNum * returnWeightNum) / 1000 : 0;
+      TRANSPORT_EMISSIONS_PER_KM_PER_KG * distanceNum * returnWeightNum : 0;
     
     // Calculate packaging emissions (same for both initial and return)
     const cardboardEmissions = cardboardWeightNum * CARDBOARD_EMISSIONS_PER_KG;
@@ -342,7 +342,7 @@ export default function CO2CalculatorPage() {
           <p>The following formulas are used in our calculations:</p>
           
           <ul className="list-disc pl-5 space-y-2">
-            <li><strong className="text-gray-800 dark:text-gray-100">Transport emissions:</strong> 0.59 kg CO2e per km per kg × distance × weight</li>
+            <li><strong className="text-gray-800 dark:text-gray-100">Transport emissions:</strong> 0.00059 kg CO2e per km per kg × distance × weight</li>
             <li><strong className="text-gray-800 dark:text-gray-100">Cardboard emissions:</strong> 2.93 kg CO2e per kg × cardboard weight</li>
             <li><strong className="text-gray-800 dark:text-gray-100">Bubble wrap emissions:</strong> 3.56 kg CO2e per kg × bubble wrap weight</li>
           </ul>
