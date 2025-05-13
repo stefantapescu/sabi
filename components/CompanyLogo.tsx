@@ -26,7 +26,7 @@ const CompanyLogo: FC<CompanyLogoProps> = ({ company, className = '' }) => {
   // Map company names to their logo files
   const getLogoPath = (name: string): string => {
     const logoMap: Record<string, string> = {
-      'mopinion': '/logos/mopinion-logo.svg',
+      'mopinion': '/logos/Mopinion logo.webp',
       'returnista': '/logos/returnista-logo.png',
       'returnless': '/logos/returnless-logo.png',
       'easysize': '/logos/Easysize Logo.png',
